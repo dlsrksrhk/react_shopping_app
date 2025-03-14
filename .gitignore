@@ -1,0 +1,51 @@
+# Node.js 관련
+**/node_modules/
+**/.pnp/
+**/.pnp.js
+
+# 빌드 결과물
+**/dist/
+**/build/
+**/.next/
+**/.turbo/
+**/.vercel/
+
+# 환경 변수 및 설정 파일
+**/.env
+**/.env.local
+**/.env.development
+**/.env.production
+**/.env.test
+**/.env.*.local
+
+# TypeScript 관련
+**/*.tsbuildinfo
+
+# 패키지 매니저 관련 (Yarn 사용)
+**/yarn-error.log*
+**/.yarn/cache/
+**/.yarn/unplugged/
+**/.yarn/build-state.yml
+**/.yarn/install-state.gz
+
+# 테스트 및 커버리지 관련
+**/coverage/
+**/.nyc_output/
+
+# 에디터 및 OS 관련
+**/.vscode/
+**/.idea/
+**/.DS_Store
+**/Thumbs.db
+
+# 로그 파일
+**/*.log
+**/*.log.*
+
+# Docker 관련
+**/docker-compose.override.yml
+
+# 기타
+**/*.bak
+**/*.old
+**/*.orig
