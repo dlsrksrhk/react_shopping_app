@@ -1,6 +1,8 @@
 // App.tsx
 
 import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { useProductContext } from "./ProductContext";
 
 interface ProductType {
   id: number
@@ -27,9 +29,11 @@ function ProductItem({
   const [editPrice, setEditPrice] = useState(price);
 
   return (
-    <div key={id}>
+    <div>
       <div>{id}</div>
-      <div>{name}</div>
+      <div>
+        <Link to={`/${id}`}>{name}</Link>
+      </div>
       <div>{price}</div>
       <div>{explanation}</div>
       <button
@@ -69,14 +73,7 @@ function ProductItem({
 }
 
 function HomePage() {
-  const [products, setProducts] = useState<ProductType[]>([
-    {
-      id: 0,
-      name: "키보드",
-      explanation: "이것은 키보드입니다.",
-      price: 10000
-    }
-  ]);
+  const [products, setProducts] = useProductContext();
 
   const [name, setName] = useState('');
   const [explanation, setExplanation] = useState('');
