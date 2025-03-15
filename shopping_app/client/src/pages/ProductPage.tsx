@@ -1,7 +1,6 @@
 // ProductPage.tsx
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useProductContext } from "./ProductContext";
 
 type ProductType = {
   id: string;
