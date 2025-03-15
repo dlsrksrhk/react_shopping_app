@@ -1,22 +1,34 @@
 // ProductPage.tsx
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useProductContext } from "./ProductContext";
+
+type ProductType = {
+  id: string;
+  name: string;
+  explanation: string;
+  price: number;
+}
 
 function ProductPage() {
   const { productId } = useParams<{ productId: string }>();
-  const [products] = useProductContext();
-  const foundProduct = products.find((product) => product.id === parseInt(productId!, 10));
+  const [product, setProduct] = useState<ProductType | null>(null);
 
-  if (!foundProduct) {
-    return <h1>상품을 찾을 수 없습니다.</h1>;
-  }
+  useEffect(() => {
+    fetch(`/product/${productId}`)
+      .then((res) => res.json())
+      .then((data) => setProduct(data.product));
+   }, [productId]);
+
+   if(!product) {
+      return <h1>존재하지 않는 상품입니다.</h1>;
+    }
 
   return (
     <div>
-      <h1>{foundProduct?.name}</h1>
-      <p>{foundProduct?.explanation}</p>
-      <span>{foundProduct?.price}</span>
+      <h1>{product?.name}</h1>
+      <p>{product?.explanation}</p>
+      <span>{product?.price}</span>
     </div>
   );
 }

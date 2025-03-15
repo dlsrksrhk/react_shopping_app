@@ -1,11 +1,11 @@
 // App.tsx
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { useProductContext } from "./ProductContext";
+
 
 interface ProductType {
-  id: number
+  id: string;
   name: string;
   explanation: string;
   price: number;
@@ -13,7 +13,7 @@ interface ProductType {
 
 interface ProductItemProps {
   product: ProductType;
-  onDelete: (id: number) => void;
+  onDelete: (id: string) => void;
   onUpdate: (product: ProductType) => void;
 }
 
@@ -73,7 +73,7 @@ function ProductItem({
 }
 
 function HomePage() {
-  const [products, setProducts] = useProductContext();
+  const [products, setProducts] = useState<ProductType[]>([]);
 
   const [name, setName] = useState('');
   const [explanation, setExplanation] = useState('');
@@ -81,28 +81,51 @@ function HomePage() {
 
   console.log(products);
 
-  const fakeId = useRef(0);
   const handleCreate = (newProduct: Omit<ProductType, 'id'>) => {
-    fakeId.current += 1;
-    setProducts([
-      ...products,
-      {
-        ...newProduct,
-        id: fakeId.current
+    fetch(`/product`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(newProduct)
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts((prevArray) => [...prevArray, data.product]);
+      });
+  };
+
+  const handleDelete = (id: string) => {
+    fetch(`/product/${id}`, {
+      method: "DELETE"
+    }).then((res) => {
+      if (res.ok) {
+        setProducts(products.filter((product) => product.id !== id));
       }
-    ]);
+    });
   };
 
-  const handleDelete = (id: number) => {
-    setProducts(products.filter((product) => product.id !== id));
-  };
+  const handleUpdate = (updateProduct: ProductType) => {
+    fetch(`/product/${updateProduct.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(updateProduct)
+    }).then((res) => {
+      if (res.ok) {
+        setProducts(products.map(
+          (product) => {
+            if (product.id === updateProduct.id) {
+              return updateProduct;
+            }
 
-  const handleUpdate = (updateProduct: {
-    id: number;
-    name: string;
-    explanation: string;
-    price: number;
-  }) => {
+            return product;
+          }
+        ));
+      }
+    });
+
     setProducts(products.map((product) => {
       if (product.id === updateProduct.id) {
         return updateProduct;
@@ -111,6 +134,14 @@ function HomePage() {
       return product;
     }));
   };
+
+  useEffect(() => {
+    fetch("/product")
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data.products);
+      });
+  }, []);
 
   return (
     <>
