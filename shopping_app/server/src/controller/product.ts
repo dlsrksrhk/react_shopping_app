@@ -6,12 +6,14 @@ const getProductIndexById = (productId: string): number => {
   return products.findIndex((product) => product.id === productId);
 };
 
-const raedProductsController = (req: Request, res: Response) =>
+const raedProductsController = async (req: Request, res: Response) => {
+  await new Promise<void>((resolve) => setTimeout(resolve, 1000));
   res.json({
     products,
     code: 200,
     message: "상품 조회 성공"
   });
+}
 
 const raedProductController = (req: Request, res: Response) => {
   const { productId } = req.params;
@@ -39,7 +41,7 @@ const createProductController = async (req: Request, res: Response) => {
     id: generatedId,
   };
 
-  await new Promise<void>((resolve) => setTimeout(resolve, 1000));
+  // await new Promise<void>((resolve) => setTimeout(resolve, 1000));
 
   products.push(newProduct);
 
@@ -77,7 +79,7 @@ const updateProductController = (req: Request, res: Response) => {
 const deleteProductController = async (req: Request, res: Response) => {
   const { productId } = req.params;
 
-  await new Promise<void>((resolve) => setTimeout(resolve, 1000));
+  // await new Promise<void>((resolve) => setTimeout(resolve, 1000));
 
   deleteById(productId);
 
