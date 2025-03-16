@@ -10,7 +10,7 @@ function App() {
     <Layout>
       <Routes>
         <Route index element={<HomePage />} />
-        <Route path="/:productId" element={<ProductPage />} />
+        <Route path="/product/:productId" element={<ProductPage />} />
         <Route path="/create" element={<ProductCreatePage />} />
       </Routes>
     </Layout>

@@ -2,67 +2,41 @@
 
 import { useEffect, useState } from "react";
 import { ProductType } from "../../types";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Box, Button, Card, CardContent, CardMedia, Grid, Typography } from "@mui/material";
+import { API_SERVER_DOMAIN } from "../../contents";
 
 interface ProductItemProps {
   product: ProductType;
-  onDelete: (id: string) => void;
-  onUpdate: (product: ProductType) => void;
 }
 
 function ProductItem({
   product,
-  onDelete,
-  onUpdate
 }: ProductItemProps) {
-  const { id, name, price, explanation } = product;
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [editName, setEditName] = useState(name);
-  const [editExplanation, setEditExplanation] = useState(explanation);
-  const [editPrice, setEditPrice] = useState(price);
+
+  const navigate = useNavigate();
+  const handlePushProductPage = () => navigate(`product/${product.id}`);
+  const handlePushPurchasePage = () => navigate(`purchase/${product.id}`);
 
   return (
-    <div>
-      {product.thumbnail && (<img src={product.thumbnail} />)}
-      <div>{id}</div>
-      <div>
-        <Link to={`/${id}`}>{name}</Link>
-      </div>
-      <div>{price}</div>
-      <div>{explanation}</div>
-      <button
-        type="button"
-        onClick={() => onDelete(id)}
-      >
-        삭제하기
-      </button>
-      <button
-        type="button"
-        onClick={() => setIsEditMode((prev) => !prev)}
-      >
-        수정하기
-      </button>
-
-      {isEditMode && (
-        <form onSubmit={
-          (event) => {
-            event.preventDefault();
-            onUpdate({
-              id,
-              name: editName,
-              explanation: editExplanation,
-              price: editPrice
-            });
-            setIsEditMode(false);
-          }
-        }>
-          <input type="text" placeholder="변경 상품 이름" value={editName} onChange={(e) => setEditName(e.target.value)} />
-          <input type="text" placeholder="변경 상품 설명" value={editExplanation} onChange={(e) => setEditExplanation(e.target.value)} />
-          <input type="number" placeholder="변경 상품 가격" value={editPrice} onChange={(e) => setEditPrice(parseInt(e.target.value))} />
-          <button type="submit">수정 완료</button>
-        </form>
-      )}
-    </div>
+    <Grid item xs={12} sm={6} md={4}>
+      <Card sx={{ maxWidth: 345, padding: 3, height: 300 }} onClick={handlePushProductPage}>
+        {product.thumbnail && (<CardMedia image={`${API_SERVER_DOMAIN}/${product.thumbnail}`} sx={{ height: 140 }} title={product.name} />)}
+        <CardContent sx={{ padding: 0 }}>
+          <Typography gutterBottom variant="h5" component="div" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} >
+            {product.name}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ height:30, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} >
+            {product.explanation}
+          </Typography>
+        </CardContent>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 3 }}>
+          <Button size="small" variant="contained" onClick={handlePushPurchasePage}>
+            구매하기
+          </Button>
+        </Box>
+      </Card>
+    </Grid>
   );
 }
 
