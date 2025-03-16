@@ -23,6 +23,7 @@ function ProductItem({
 
   return (
     <div>
+      {product.thumbnail && (<img src={product.thumbnail} />)}
       <div>{id}</div>
       <div>
         <Link to={`/${id}`}>{name}</Link>
