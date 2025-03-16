@@ -2,6 +2,7 @@
 
 import { AppBar, Box, Button, Container, Fab, Toolbar, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import CreateIcon from '@mui/icons-material/Create';
 
 type Props = {
   children: React.ReactNode;
@@ -32,9 +33,9 @@ const Layout = ({ children }: Props) => {
         </Container>
       </Box>
 
-      <Box sx={{position: 'fixed', right: '16px', bottom: '16px'}}>
+      <Box sx={{ position: 'fixed', right: '16px', bottom: '16px' }}>
         <Fab color="primary" onClick={handlePushCreatePage}>
-          추가하기
+          <CreateIcon />
         </Fab>
       </Box>
     </>
