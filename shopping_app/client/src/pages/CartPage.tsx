@@ -9,6 +9,7 @@ function CartPage() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { carts } = useCart();
+  const totalPrice = carts.reduce((prev, curr) => prev + (curr.price * curr.count), 0);
 
   const handlePurchaseProduct = (event: React.FormEvent) => {
     event.preventDefault();
@@ -46,13 +47,13 @@ function CartPage() {
             <Box sx={{ position: 'sticky', top: 20 }}>
               <Card sx={{ padding: 2 }}>
                 <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
-                  총 상품 가격: 0원
+                  총 상품 가격: {totalPrice.toLocaleString('ko-KR')}원
                 </Typography>
                 <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
                   배송비: 평생 무료
                 </Typography>
                 <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
-                  총 결제 금액: 0원
+                  총 결제 금액: {totalPrice.toLocaleString('ko-KR')}원
                 </Typography>
                 <Button variant="contained" fullWidth onClick={handlePurchaseProduct}>
                   결제하기
