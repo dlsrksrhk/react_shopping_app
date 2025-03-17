@@ -1,6 +1,4 @@
 // CartPage.tsx
-import { useCookies } from "react-cookie";
-import { ProductType } from "../types";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Box, Button, Card, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Typography } from "@mui/material";
@@ -10,7 +8,7 @@ import { useCart } from "../hooks";
 function CartPage() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { cart } = useCart();
+  const { carts } = useCart();
 
   const handlePurchaseProduct = (event: React.FormEvent) => {
     event.preventDefault();
@@ -30,12 +28,12 @@ function CartPage() {
             <Typography variant="h4" sx={{ marginBottom: 2 }}>
               장바구니
             </Typography>
-            {cart.length === 0 ? (
+            {carts.length === 0 ? (
               <Typography variant="body1">
                 장바구니에 담긴 상품이 없습니다.
               </Typography>
             ) : (
-              cart.map((cart) => {
+              carts.map((cart) => {
                 return <CartItem key={cart.id} cart={cart} />
               })
             )}
