@@ -2,14 +2,18 @@
 
 import { useState } from "react";
 import { ProductType } from "../../types";
-import { Button, Container, TextField, Typography } from "@mui/material";
+import { Button, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Typography } from "@mui/material";
 import ThumbnailUploader from "./ThumbnailUploader";
+import { useNavigate } from "react-router-dom";
 
 const ProductCreateForm = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [explanation, setExplanation] = useState('');
   const [price, setPrice] = useState(0);
   const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const [createdProductId, setCreatedProductId] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -58,7 +62,14 @@ const ProductCreateForm = () => {
       await uploadThumbnailRequest(data.product.id, thumbnail);
     }
 
+    setCreatedProductId(data.product.id);
+    setIsModalOpen(true);
   };
+
+  const handlePushProductPage = () => {
+    setIsModalOpen(false);
+    navigate(`/product/${createdProductId}`);
+  }
 
   return (
     <>
@@ -74,6 +85,22 @@ const ProductCreateForm = () => {
           <Button type="submit" variant="contained" color="primary" fullWidth sx={{ marginTop: 6 }}>생성</Button>
         </form>
       </Container>
+
+      <Dialog open={isModalOpen} onClose={handlePushProductPage} aria-labelledby="responsive-dialog-title">
+        <DialogTitle id="responsive-dialog-title">
+          상품을 성공적으로 추가했습니다.
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            확인을 누르면 상품상세 페이지로 이동합니다.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handlePushProductPage}>
+            확인
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
