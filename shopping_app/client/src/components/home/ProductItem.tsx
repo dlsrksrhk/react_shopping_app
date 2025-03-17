@@ -21,7 +21,7 @@ function ProductItem({
   return (
     <Grid item xs={12} sm={6} md={4}>
       <Card sx={{ maxWidth: 345, padding: 3, height: 300 }} onClick={handlePushProductPage}>
-        {product.thumbnail && (<CardMedia image={`${API_SERVER_DOMAIN}/${product.thumbnail}`} sx={{ height: 140 }} title={product.name} />)}
+        {product.thumbnail && (<CardMedia image={`${API_SERVER_DOMAIN}/${product.thumbnail?.replace(/\\/g, "/")}`} sx={{ height: 140 }} title={product.name} />)}
         <CardContent sx={{ padding: 0 }}>
           <Typography gutterBottom variant="h5" component="div" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} >
             {product.name}
