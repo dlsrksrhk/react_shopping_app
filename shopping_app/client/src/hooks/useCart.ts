@@ -1,7 +1,6 @@
 import { useCookies } from "react-cookie";
 import { ProductType } from "../types";
 import { useEffect, useMemo, useState } from "react";
-import { count } from "console";
 
 type CartType = ProductType & { count: number };
 
@@ -10,6 +9,30 @@ const useCart = () => {
     const [cookies, setCookies] = useCookies([COOKIE_KEY]);
     const [carts, setCarts] = useState<CartType[]>([]);
     const productIds = useMemo(() => (cookies[COOKIE_KEY] as string[]) ?? [], [cookies]);
+
+
+    const changeCount = (productId: string, mode: "increase" | "decrease") => {
+        const index = productIds.indexOf(productId);
+        if (index === -1) {
+            return;
+        }
+
+        if (mode === "decrease") {
+            const tempArr = [...productIds];
+            tempArr.splice(index, 1);
+
+            //1개 미만으로 떨어지지 않게 하기위한 방어코드드
+            if (!tempArr.includes(productId)) {
+                return;
+            }
+
+            setCookies(COOKIE_KEY, tempArr, { path: '/' });
+        }
+
+        if (mode === "increase") {
+            setCookies(COOKIE_KEY, [...productIds, productId], { path: '/' });
+        }
+    }
 
     const addCarts = (id: string) => {
         const nextCartIds = [...productIds, id];
@@ -47,7 +70,7 @@ const useCart = () => {
         }
     }, [productIds]);
 
-    return { carts, addCarts };
+    return { carts, addCarts, changeCount };
 }
 
 export default useCart;
