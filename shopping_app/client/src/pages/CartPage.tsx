@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Box, Button, Card, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Typography } from "@mui/material";
 import { CartItem } from "../components/cart";
+import { useCart } from "../hooks";
 
 function CartPage() {
   const navigate = useNavigate();
-  const [cookies] = useCookies(["cart"]);
-  const cartItems = (cookies.cart as ProductType[]) || null;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { cart } = useCart();
 
   const handlePurchaseProduct = (event: React.FormEvent) => {
     event.preventDefault();
@@ -22,10 +22,6 @@ function CartPage() {
     navigate('/');
   }
 
-  if (!cartItems) {
-    return <h1>장바구니에 담은 아이템이 없습니다.</h1>
-  }
-
   return (
     <>
       <Container fixed>
@@ -34,12 +30,12 @@ function CartPage() {
             <Typography variant="h4" sx={{ marginBottom: 2 }}>
               장바구니
             </Typography>
-            {!cartItems || cartItems.length === 0 ? (
+            {cart.length === 0 ? (
               <Typography variant="body1">
                 장바구니에 담긴 상품이 없습니다.
               </Typography>
             ) : (
-              cartItems?.map((cart) => {
+              cart.map((cart) => {
                 return <CartItem key={cart.id} cart={cart} />
               })
             )}

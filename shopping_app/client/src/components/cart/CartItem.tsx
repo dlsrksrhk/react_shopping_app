@@ -12,7 +12,7 @@ type Props = {
 function CartItem({ cart }: Props) {
   return (
     <Card sx={{ display: 'flex', marginBottom: 2 }}>
-      {cart.thumbnail && (<CardMedia image={`${API_SERVER_DOMAIN}/${cart.thumbnail?.replace(/\\/g, "/")}`} sx={{ height: 100 }} title={cart.name} />)}
+      {cart.thumbnail && (<CardMedia image={`${API_SERVER_DOMAIN}/${cart.thumbnail?.replace(/\\/g, "/")}`} sx={{ width:120 }} title={cart.name} />)}
 
       <CardContent sx={{ width: '100%' }}>
         <Typography variant="h6">

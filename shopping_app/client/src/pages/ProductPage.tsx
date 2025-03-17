@@ -6,6 +6,7 @@ import { API_SERVER_DOMAIN } from "../contents";
 import { Delete, Edit } from "@mui/icons-material";
 import { ProductType } from "../types";
 import { useCookies } from "react-cookie";
+import { useCart } from "../hooks";
 
 
 function ProductPage() {
@@ -15,13 +16,15 @@ function ProductPage() {
   const [product, setProduct] = useState<ProductType | null>(null);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const { addCart } = useCart();
 
   const cartItems = cookies.cart as ProductType[];
 
   const handleAddCart = () => {
-    const nextValue = cartItems ? [...cartItems, product] : [product];
-    setCookies("cart", nextValue, { path: "/" });
-    setIsCartModalOpen(true);
+    if(product){
+      addCart(product);
+      setIsCartModalOpen(true);
+    }
   }
 
   const handlePushCartPage = () => {
