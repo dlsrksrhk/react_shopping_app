@@ -4,15 +4,18 @@ import { Card, CardContent, CardMedia, Grid, IconButton, Typography } from "@mui
 import { API_SERVER_DOMAIN } from "../../contents";
 import { grey } from "@mui/material/colors";
 import { Add, Delete, Remove } from "@mui/icons-material";
+import { useCart } from "../../hooks";
 
 type Props = {
-  cart: ProductType;
+  cart: ProductType & { count: number };
 }
 
 function CartItem({ cart }: Props) {
+  const {changeCount} = useCart();
+
   return (
     <Card sx={{ display: 'flex', marginBottom: 2 }}>
-      {cart.thumbnail && (<CardMedia image={`${API_SERVER_DOMAIN}/${cart.thumbnail?.replace(/\\/g, "/")}`} sx={{ height: 100 }} title={cart.name} />)}
+      {cart.thumbnail && (<CardMedia image={`${API_SERVER_DOMAIN}/${cart.thumbnail?.replace(/\\/g, "/")}`} sx={{ width:120 }} title={cart.name} />)}
 
       <CardContent sx={{ width: '100%' }}>
         <Typography variant="h6">
@@ -24,9 +27,9 @@ function CartItem({ cart }: Props) {
 
         <Grid container justifyContent="space-between">
           <Grid item>
-            <IconButton><Remove /></IconButton>
-            {0}
-            <IconButton><Add /></IconButton>
+            <IconButton onClick={() => changeCount(cart.id, "decrease")}><Remove /></IconButton>
+            {cart.count}
+            <IconButton onClick={() => changeCount(cart.id, "increase")}><Add /></IconButton>
           </Grid>
           <Grid item>
             <IconButton><Delete /></IconButton>

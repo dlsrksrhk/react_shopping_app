@@ -1,16 +1,15 @@
 // CartPage.tsx
-import { useCookies } from "react-cookie";
-import { ProductType } from "../types";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Box, Button, Card, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Typography } from "@mui/material";
 import { CartItem } from "../components/cart";
+import { useCart } from "../hooks";
 
 function CartPage() {
   const navigate = useNavigate();
-  const [cookies] = useCookies(["cart"]);
-  const cartItems = (cookies.cart as ProductType[]) || null;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { carts } = useCart();
+  const totalPrice = carts.reduce((prev, curr) => prev + (curr.price * curr.count), 0);
 
   const handlePurchaseProduct = (event: React.FormEvent) => {
     event.preventDefault();
@@ -22,10 +21,6 @@ function CartPage() {
     navigate('/');
   }
 
-  if (!cartItems) {
-    return <h1>장바구니에 담은 아이템이 없습니다.</h1>
-  }
-
   return (
     <>
       <Container fixed>
@@ -34,12 +29,12 @@ function CartPage() {
             <Typography variant="h4" sx={{ marginBottom: 2 }}>
               장바구니
             </Typography>
-            {!cartItems || cartItems.length === 0 ? (
+            {carts.length === 0 ? (
               <Typography variant="body1">
                 장바구니에 담긴 상품이 없습니다.
               </Typography>
             ) : (
-              cartItems?.map((cart) => {
+              carts.map((cart) => {
                 return <CartItem key={cart.id} cart={cart} />
               })
             )}
@@ -52,13 +47,13 @@ function CartPage() {
             <Box sx={{ position: 'sticky', top: 20 }}>
               <Card sx={{ padding: 2 }}>
                 <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
-                  총 상품 가격: 0원
+                  총 상품 가격: {totalPrice.toLocaleString('ko-KR')}원
                 </Typography>
                 <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
                   배송비: 평생 무료
                 </Typography>
                 <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
-                  총 결제 금액: 0원
+                  총 결제 금액: {totalPrice.toLocaleString('ko-KR')}원
                 </Typography>
                 <Button variant="contained" fullWidth onClick={handlePurchaseProduct}>
                   결제하기

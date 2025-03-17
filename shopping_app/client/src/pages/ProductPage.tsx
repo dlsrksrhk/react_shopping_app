@@ -5,23 +5,22 @@ import { Box, Button, ButtonGroup, Container, Dialog, DialogActions, DialogConte
 import { API_SERVER_DOMAIN } from "../contents";
 import { Delete, Edit } from "@mui/icons-material";
 import { ProductType } from "../types";
-import { useCookies } from "react-cookie";
+import { useCart } from "../hooks";
 
 
 function ProductPage() {
   const navigate = useNavigate();
   const { productId } = useParams<{ productId: string }>();
-  const [cookies, setCookies] = useCookies(['cart']);
   const [product, setProduct] = useState<ProductType | null>(null);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-  const cartItems = cookies.cart as ProductType[];
+  const { addCarts } = useCart();
 
   const handleAddCart = () => {
-    const nextValue = cartItems ? [...cartItems, product] : [product];
-    setCookies("cart", nextValue, { path: "/" });
-    setIsCartModalOpen(true);
+    if (product) {
+      addCarts(product.id);
+      setIsCartModalOpen(true);
+    }
   }
 
   const handlePushCartPage = () => {
@@ -39,7 +38,7 @@ function ProductPage() {
       .then((data) => setProduct(data.product));
   }, [productId]);
 
-  if (!product) {
+  if (!productId) {
     return <h1>존재하지 않는 상품입니다.</h1>;
   }
 
